@@ -88,7 +88,7 @@ public class StupidTele extends LinearOpMode {
                 if (isOpen) {
                     claw.setPosition(0.88);
                 } else {
-                    claw.setPosition(0.55);
+                    claw.setPosition(0.71);
                 }
             }
 
@@ -199,6 +199,7 @@ public class StupidTele extends LinearOpMode {
             // }
             telemetry.addData("handPos", hand.getPosition());
             telemetry.addData("isOpen", isOpen);
+            telemetry.addData("clawPos", claw.getPosition());
 //            telemetry.addData("handPos", handPos);
 //            telemetry.addData("clawPosition", claw.getPosition());
 //            telemetry.addData("armPosition", currentArmPosition);
