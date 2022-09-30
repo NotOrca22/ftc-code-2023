@@ -21,6 +21,7 @@ public class StupidTele extends LinearOpMode {
     public static int ARM_VERTIAL_POSITION = 1109;
     public static int ARM_FRONT_HORIZONTAL = 2041;
     public static int ARM_BACK_HORIZONTAL = 177;
+
     public static final double ARM_GEAR_RATIO = 139.13824192336588;
     public static final double WHEEL_DIAMETER_MILLIMETTER = 96;
     public static final int WHEEL_MOTOR_SPPED_IN_RPM = 312;
@@ -58,7 +59,7 @@ public class StupidTele extends LinearOpMode {
 //        arm.setTargetPosition(1);
 //        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //        arm.setVelocity(ARM_FULL_SPEED_IN_COUNTS);
-        claw.setPosition(0.8);
+//        claw.setPosition(0.8);
         waitForStart();
         boolean grabberIsOpen = false;
         double GRABBER_SPEED = 0.02;
@@ -80,15 +81,17 @@ public class StupidTele extends LinearOpMode {
             if (gamepad2.a) {
                 handPos = 0.6;
             }
-            if (isOpen) {
-                claw.setPosition(0.88);
-            } else {
-                claw.setPosition(0.55);
-            }
+
             hand.setPosition(handPos);
             if (gamepad2.x) {
                 isOpen = !isOpen;
+                if (isOpen) {
+                    claw.setPosition(0.88);
+                } else {
+                    claw.setPosition(0.55);
+                }
             }
+
 //            if (gamepad2.dpad_left) {
 //                handPos += 0.02;
 //            }
