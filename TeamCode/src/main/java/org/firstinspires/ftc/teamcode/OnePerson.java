@@ -15,8 +15,8 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name="OrcaTele1",group="")
-public class StupidTele extends LinearOpMode {
+@TeleOp(name="OnePersonTele",group="")
+public class OnePerson extends LinearOpMode {
     public static final double COUNTS_PER_ENCODER_REV = 28;
     public static int ARM_VERTIAL_POSITION = 1109;
     public static int ARM_FRONT_HORIZONTAL = 2041;
@@ -33,17 +33,17 @@ public class StupidTele extends LinearOpMode {
 //        DistanceSensor distanceSensor = hardwareMap.get(DistanceSensor.class, "distanceSensor");
 //        Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)distanceSensor;
         boolean runSlowMo = true;
-        DcMotor slider = hardwareMap.dcMotor.get("slider");
-        DcMotorEx arm = (DcMotorEx) hardwareMap.dcMotor.get("arm");
-        Servo hand = hardwareMap.servo.get("hand");
+//        DcMotor slider = hardwareMap.dcMotor.get("slider");
+//        DcMotorEx arm = (DcMotorEx) hardwareMap.dcMotor.get("arm");
+//        Servo hand = hardwareMap.servo.get("hand");
 //        hand.setPosition(0.999);
-        boolean handUp = false;
+//        boolean handUp = false;
         DcMotor motorFrontLeft = hardwareMap.dcMotor.get("frontLeft");
         DcMotor motorBackLeft = hardwareMap.dcMotor.get("backLeft");
         DcMotor motorFrontRight = hardwareMap.dcMotor.get("frontRight");
         DcMotor motorBackRight = hardwareMap.dcMotor.get("backRight");
-        DcMotorEx turn = (DcMotorEx) hardwareMap.dcMotor.get("turn");
-        Servo claw = hardwareMap.servo.get("claw");
+        DcMotorEx raise = (DcMotorEx) hardwareMap.dcMotor.get("raise");
+//        Servo claw = hardwareMap.servo.get("claw");
 //        hand.setPosition(0.36);
 //        hand.setPosition(0.75);
 //        hand.setDirection(Servo.Direction.REVERSE);
@@ -51,7 +51,7 @@ public class StupidTele extends LinearOpMode {
 
 
 //        DcMotorEx arm = hardwareMap.get(DcMotorEx.class, "arm"); // Minimum -2, Maximum -1272
-//        Servo claw = hardwareMap.servo.get("claw");
+        Servo claw = hardwareMap.servo.get("claw");
 
 //        Servo grabber = hardwareMap.servo.get("grabber");
 
@@ -71,24 +71,24 @@ public class StupidTele extends LinearOpMode {
         double handPos = 0;
         while (opModeIsActive()) {
 //            boolean isOpen = false;
-            if (gamepad2.y) {
-                if (handPos == 0.36) {
-                    handPos = 0.75;
-                } else {
-                    handPos = 0.36;
-                }
-            }
-            if (gamepad2.a) {
-                handPos = 0.6;
-            }
-
-            hand.setPosition(handPos);
-            if (gamepad2.x) {
+//            if (gamepad2.y) {
+//                if (handPos == 0.36) {
+//                    handPos = 0.75;
+//                } else {
+//                    handPos = 0.36;
+//                }
+//            }
+//            if (gamepad2.a) {
+//                handPos = 0.6;
+//            }
+//
+//            hand.setPosition(handPos);
+            if (gamepad1.x) {
                 isOpen = !isOpen;
                 if (isOpen) {
                     claw.setPosition(0.88);
                 } else {
-                    claw.setPosition(0.71);
+                    claw.setPosition(0.69);
                 }
             }
 
@@ -109,30 +109,31 @@ public class StupidTele extends LinearOpMode {
 //            }
 
 
-            int currentArmPosition = arm.getCurrentPosition();
-            int armStep = 0;
-            if(gamepad2.dpad_down){
-                armStep = -200;
-            }else if(gamepad2.dpad_up){
-                armStep = 200;
-            }else{
-                armStep = 0;
-//                armStep = (int)-gamepad2.left_stick_x*50;
-            }
-            int currentTurnPosition = turn.getCurrentPosition();
-            int turnStep = 50;
-            int targetPosition = armStep + currentArmPosition;
-            arm.setTargetPosition(targetPosition);
-            arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            arm.setVelocity(ARM_FULL_SPEED_IN_COUNTS);
-            int targetTurn = currentTurnPosition + (int)(50*((gamepad2.right_trigger-gamepad2.left_trigger)));
-            turn.setTargetPosition(targetTurn);
-            turn.setVelocity(80 * (gamepad2.right_trigger-gamepad2.left_trigger));
+//            int currentArmPosition = arm.getCurrentPosition();
+//            int armStep = 0;
+//            if(gamepad2.dpad_down){
+//                armStep = -200;
+//            }else if(gamepad2.dpad_up){
+//                armStep = 200;
+//            }else{
+//                armStep = 0;
+////                armStep = (int)-gamepad2.left_stick_x*50;
+//            }
+//            int currentTurnPosition = turn.getCurrentPosition();
+//            int turnStep = 50;
+//            int targetPosition = armStep + currentArmPosition;
+//            arm.setTargetPosition(targetPosition);
+//            arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            arm.setVelocity(ARM_FULL_SPEED_IN_COUNTS);
+//            int targetTurn = currentTurnPosition + (int)(50*((gamepad2.right_trigger-gamepad2.left_trigger)));
+//            turn.setTargetPosition(targetTurn);
+//            turn.setVelocity(80 * (gamepad2.right_trigger-gamepad2.left_trigger));
             double y = gamepad1.left_stick_x;
             double x = gamepad1.left_stick_y * 1.1; // Counteract imperfect strafing
             double rx = gamepad1.right_stick_x;
+
 //            arm.setPower(gamepad2.left_stick_y/2);
-            slider.setPower(gamepad2.right_stick_y/4);
+//            slider.setPower(gamepad2.right_stick_y/4);
             if (gamepad1.a) {
                 runSlowMo = true;
             } else if (gamepad1.b) {
@@ -141,37 +142,50 @@ public class StupidTele extends LinearOpMode {
             if (runSlowMo == true) {
                 if (x != 0 || y != 0) {
                     double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-                    double frontLeftPower = -(-y + x+rx) / denominator;
+                    double frontLeftPower = -(y + x+rx) / denominator;
                     double backLeftPower = -(-y - x+rx) / denominator;
-                    double frontRightPower = -(-y - x+rx) / denominator;
-                    double backRightPower = (-y +  x+rx) / denominator;
+                    double frontRightPower = (-y + x+rx) / denominator;
+                    double backRightPower = (y - x+rx) / denominator;
                     motorFrontLeft.setPower(frontLeftPower/2);
-                    motorBackLeft.setPower(-backLeftPower/2);
+                    motorBackLeft.setPower(backLeftPower/2);
                     motorFrontRight.setPower(frontRightPower/2);
-                    motorBackRight.setPower(-backRightPower/2);
+                    motorBackRight.setPower(backRightPower/2);
                 } else {
                     motorFrontLeft.setPower(-rx/2);
                     motorBackLeft.setPower(-rx/2);
                     motorFrontRight.setPower(-rx/2);
-                    motorBackRight.setPower(rx/2);
+                    motorBackRight.setPower(-rx/2);
                 }
             } else
             if (x != 0 || y != 0) {
                 double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-                double frontLeftPower = (-y + x+rx) / denominator;
-                double backLeftPower = (-y - x+rx) / denominator;
-                double frontRightPower = (-y - x+rx) / denominator;
-                double backRightPower = (-y + x+rx) / denominator;
+                double frontLeftPower = -(y + x+rx) / denominator;
+                double backLeftPower = -(-y - x+rx) / denominator;
+                double frontRightPower = (-y + x+rx) / denominator;
+                double backRightPower = (y - x+rx) / denominator;
                 motorFrontLeft.setPower(frontLeftPower);
-                motorBackLeft.setPower(-backLeftPower);
+                motorBackLeft.setPower(backLeftPower);
                 motorFrontRight.setPower(frontRightPower);
                 motorBackRight.setPower(backRightPower);
             } else {
-                motorFrontLeft.setPower(rx);
-                motorBackLeft.setPower(rx);
+                motorFrontLeft.setPower(-rx);
+                motorBackLeft.setPower(-rx);
                 motorFrontRight.setPower(-rx);
                 motorBackRight.setPower(-rx);
             }
+            int currentRaisedPosition = raise.getCurrentPosition();
+            int raiseStep = 0;
+            if(gamepad1.dpad_down) {
+                raiseStep = 200;
+            } else if (gamepad1.dpad_up) {
+                raiseStep = -200;
+            } else {
+                raiseStep = 0;
+            }
+            int targetRaise = currentRaisedPosition + raiseStep;
+            raise.setTargetPosition(targetRaise);
+            raise.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            raise.setVelocity(ARM_FULL_SPEED_IN_COUNTS);
 //            carousel.setPower(gamepad1.right_trigger - gamepad1.left_trigger);
 
 //            int currentArmPosition = arm.getCurrentPosition();
@@ -201,9 +215,9 @@ public class StupidTele extends LinearOpMode {
             // }else{
             //     arm.setPower(0);
             // }
-            telemetry.addData("handPos", hand.getPosition());
+//            telemetry.addData("handPos", hand.getPosition());
             telemetry.addData("isOpen", isOpen);
-            telemetry.addData("clawPos", claw.getPosition());
+//            telemetry.addData("clawPos", claw.getPosition());
 //            telemetry.addData("handPos", handPos);
 //            telemetry.addData("clawPosition", claw.getPosition());
 //            telemetry.addData("armPosition", currentArmPosition);
