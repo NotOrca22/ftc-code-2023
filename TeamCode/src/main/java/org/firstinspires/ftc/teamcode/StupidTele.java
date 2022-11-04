@@ -33,7 +33,7 @@ public class StupidTele extends LinearOpMode {
 //        DistanceSensor distanceSensor = hardwareMap.get(DistanceSensor.class, "distanceSensor");
 //        Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)distanceSensor;
         boolean runSlowMo = true;
-        DcMotor slider = hardwareMap.dcMotor.get("slider");
+//        DcMotor slider = hardwareMap.dcMotor.get("slider");
         DcMotorEx arm = (DcMotorEx) hardwareMap.dcMotor.get("arm");
         Servo hand = hardwareMap.servo.get("hand");
 //        hand.setPosition(0.999);
@@ -132,7 +132,7 @@ public class StupidTele extends LinearOpMode {
             double x = gamepad1.left_stick_y * 1.1; // Counteract imperfect strafing
             double rx = gamepad1.right_stick_x;
 //            arm.setPower(gamepad2.left_stick_y/2);
-            slider.setPower(gamepad2.right_stick_y/4);
+//            slider.setPower(gamepad2.right_stick_y/4);
             if (gamepad1.a) {
                 runSlowMo = true;
             } else if (gamepad1.b) {

@@ -50,6 +50,9 @@ public class YixuanIsBadAuto extends LinearOpMode {
     public DcMotorEx motorBackLeft;
     public DcMotorEx motorBackRight;
     public Servo claw;
+    public boolean isStillDriving() {
+        return motorFrontLeft.isBusy() || motorFrontRight.isBusy() || motorBackLeft.isBusy() || motorBackRight.isBusy();
+    }
 //    public void setDrivingMotorMode(DcMotor.RunMode mode) {
 //        motorFrontRight.setMode(mode);
 //        motorFrontLeft.setMode(mode);
@@ -62,22 +65,23 @@ public class YixuanIsBadAuto extends LinearOpMode {
         int distanceInCounts = (int) (distanceInMilliMeter * COUNTS_PER_MILLIMETER);
 //        setDrivingMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorFrontRight.setTargetPosition(distanceInCounts);
-        motorFrontLeft.setTargetPosition(distanceInCounts);
+        motorFrontLeft.setTargetPosition(-distanceInCounts);
         motorBackRight.setTargetPosition(distanceInCounts);
-        motorBackLeft.setTargetPosition(distanceInCounts);
+        motorBackLeft.setTargetPosition(-distanceInCounts);
 //        setDrivingMotorMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorFrontRight.setVelocity(WHEEL_FULL_SPEED_IN_COUNTS * speed * direction);
-        motorFrontLeft.setVelocity(WHEEL_FULL_SPEED_IN_COUNTS * speed * direction);
+        motorFrontLeft.setVelocity(-WHEEL_FULL_SPEED_IN_COUNTS * speed * direction);
         motorBackRight.setVelocity(WHEEL_FULL_SPEED_IN_COUNTS * speed * direction);
-        motorBackLeft.setVelocity(WHEEL_FULL_SPEED_IN_COUNTS * speed * direction);
+        motorBackLeft.setVelocity(-WHEEL_FULL_SPEED_IN_COUNTS * speed * direction);
 
-//        while (isStillDriving()) {
+        while (isStillDriving()) {
+            sleep(100);
 //            // telemetry.addData("Front right motor speed", motorFrontRight.getVelocity());
 //            // telemetry.addData("Front left motor speed", motorFrontLeft.getVelocity());
 //            // telemetry.addData("Back right speed", motorBackRight.getVelocity());
 //            // telemetry.addData("Back left speed", motorBackLeft.getVelocity());
 //            // telemetry.update()
-//        }
+        }
     }
     @Override
     public void runOpMode() throws InterruptedException {
@@ -98,7 +102,7 @@ public class YixuanIsBadAuto extends LinearOpMode {
 //        motorBackRight.setPower(-0);
 //        motorFrontRight.setPower(-0);
 //        motorFrontLeft.setPower(-0);
-        driveDistance(500, 0.2);
+        driveDistance(500, 2);
 //        driveDistance(-350000000, 0.3);
     }
 //    driveDistance
