@@ -112,9 +112,9 @@ public class StupidTele extends LinearOpMode {
             int currentArmPosition = arm.getCurrentPosition();
             int armStep = 0;
             if(gamepad2.dpad_down){
-                armStep = -200;
+                armStep = -20;
             }else if(gamepad2.dpad_up){
-                armStep = 200;
+                armStep = 20;
             }else{
                 armStep = 0;
 //                armStep = (int)-gamepad2.left_stick_x*50;
