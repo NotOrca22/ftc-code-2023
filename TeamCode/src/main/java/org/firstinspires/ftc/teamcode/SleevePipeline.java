@@ -21,7 +21,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Locale;
 
-public class CamPipeline extends OpenCvPipeline {
+public class SleevePipeline extends OpenCvPipeline {
     /*
      * An enum to define the skystone position
      */
@@ -111,7 +111,7 @@ public class CamPipeline extends OpenCvPipeline {
      * This function takes the RGB frame, converts to YCrCb,
      * and extracts the Cb channel to the 'Cb' variable
      */
-    void inputToCb(Mat input) {
+    void inputToCr(Mat input) {
 
 //            File file = new File(AppUtil.ROBOT_DATA_DIR, String.format(Locale.getDefault(), "bitmap-frame-%d.jpg", 0));
 //            try {
@@ -123,7 +123,7 @@ public class CamPipeline extends OpenCvPipeline {
 //                RobotLog.ee(TAG, e, "exception in saveBitmap()");
 //            }
         Imgproc.cvtColor(input, YCrCb, Imgproc.COLOR_RGB2YCrCb);
-        Core.extractChannel(input, b, 2);
+        Core.extractChannel(input, b, 0);
     }
 
     @Override
@@ -144,7 +144,7 @@ public class CamPipeline extends OpenCvPipeline {
          * buffer would be re-allocated the first time a real frame
          * was crunched)
          */
-        inputToCb(firstFrame);
+        inputToCr(firstFrame);
         Bitmap bmp = Bitmap.createBitmap(640, 480, Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(firstFrame,bmp);
         saveBitmap(bmp);
@@ -181,8 +181,8 @@ public class CamPipeline extends OpenCvPipeline {
     public Mat processFrame(Mat input) {
         ElapsedTime time = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         System.out.println("started");
-        Boolean SlotMID = isElement(144, 375); // for center
-        Boolean Slot1 = isElement(424, 365); // for center
+        Boolean SlotMID = isElement(122, 375); // for center
+        Boolean Slot1 = isElement(480, 375); // for center
 //        Boolean SlotMID = isElement(82,380); // for home
 //        Boolean Slot1 = isElement(347,380); // for home
         /*
@@ -223,7 +223,7 @@ public class CamPipeline extends OpenCvPipeline {
         /*
          * Get the Cb channel of the input frame after conversion to YCrCb
          */
-        inputToCb(input);
+        inputToCr(input);
         /*
          * Compute the average pixel value of each submat region. We're
          * taking the average of a single channel buffer, so the value
