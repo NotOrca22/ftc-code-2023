@@ -1,3 +1,5 @@
+package org.firstinspires.ftc.teamcode;
+
 /* Copyright (c) 2020 FIRST. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -27,44 +29,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+import android.graphics.Bitmap;
+import android.graphics.ImageFormat;
+import android.os.Handler;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.RobotLog;
 
-        import android.graphics.Bitmap;
-        import android.graphics.ImageFormat;
-        import android.os.Handler;
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.android.util.Size;
+import org.firstinspires.ftc.robotcore.external.function.Consumer;
+import org.firstinspires.ftc.robotcore.external.function.Continuation;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.Camera;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCaptureRequest;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCaptureSequenceId;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCaptureSession;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCharacteristics;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraException;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraFrame;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraManager;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.internal.collections.EvictingBlockingQueue;
+import org.firstinspires.ftc.robotcore.internal.network.CallbackLooper;
+import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
+import org.firstinspires.ftc.robotcore.internal.system.ContinuationSynchronizer;
+import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 
-        import androidx.annotation.NonNull;
-
-        import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-        import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-        import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-        import com.qualcomm.robotcore.util.RobotLog;
-
-        import org.firstinspires.ftc.robotcore.external.ClassFactory;
-        import org.firstinspires.ftc.robotcore.external.android.util.Size;
-        import org.firstinspires.ftc.robotcore.external.function.Consumer;
-        import org.firstinspires.ftc.robotcore.external.function.Continuation;
-        import org.firstinspires.ftc.robotcore.external.hardware.camera.Camera;
-        import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCaptureRequest;
-        import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCaptureSequenceId;
-        import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCaptureSession;
-        import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCharacteristics;
-        import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraException;
-        import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraFrame;
-        import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraManager;
-        import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-        import org.firstinspires.ftc.robotcore.internal.collections.EvictingBlockingQueue;
-        import org.firstinspires.ftc.robotcore.internal.network.CallbackLooper;
-        import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
-        import org.firstinspires.ftc.robotcore.internal.system.ContinuationSynchronizer;
-        import org.firstinspires.ftc.robotcore.internal.system.Deadline;
-
-        import java.io.File;
-        import java.io.FileOutputStream;
-        import java.io.IOException;
-        import java.util.Locale;
-        import java.util.concurrent.ArrayBlockingQueue;
-        import java.util.concurrent.TimeUnit;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Locale;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This OpMode illustrates how to open a webcam and retrieve images from it. It requires a configuration
@@ -73,8 +70,7 @@ package org.firstinspires.ftc.teamcode;
  * by various means (e.g.: Device File Explorer in Android Studio; plugging the device into a PC and
  * using Media Transfer; ADB; etc)
  */
-@TeleOp(name="Concept: Webcam 2", group ="Fish")
-//@Disabled
+@TeleOp(name="Concept: Webcam", group ="Concept")
 public class ConceptWebcam extends LinearOpMode {
 
     //----------------------------------------------------------------------------------------------
@@ -213,13 +209,13 @@ public class ConceptWebcam extends LinearOpMode {
         try {
             /** Create a session in which requests to capture frames can be made */
             camera.createCaptureSession(Continuation.create(callbackHandler, new CameraCaptureSession.StateCallbackDefault() {
-                @Override public void onConfigured(@NonNull CameraCaptureSession session) {
+                @Override public void onConfigured(CameraCaptureSession session) {
                     try {
                         /** The session is ready to go. Start requesting frames */
                         final CameraCaptureRequest captureRequest = camera.createCaptureRequest(imageFormat, size, fps);
                         session.startCapture(captureRequest,
                                 new CameraCaptureSession.CaptureCallback() {
-                                    @Override public void onNewFrame(@NonNull CameraCaptureSession session, @NonNull CameraCaptureRequest request, @NonNull CameraFrame cameraFrame) {
+                                    @Override public void onNewFrame(CameraCaptureSession session, CameraCaptureRequest request, CameraFrame cameraFrame) {
                                         /** A new frame is available. The frame data has <em>not</em> been copied for us, and we can only access it
                                          * for the duration of the callback. So we copy here manually. */
                                         Bitmap bmp = captureRequest.createEmptyBitmap();
@@ -228,7 +224,7 @@ public class ConceptWebcam extends LinearOpMode {
                                     }
                                 },
                                 Continuation.create(callbackHandler, new CameraCaptureSession.StatusCallback() {
-                                    @Override public void onCaptureSequenceCompleted(@NonNull CameraCaptureSession session, CameraCaptureSequenceId cameraCaptureSequenceId, long lastFrameNumber) {
+                                    @Override public void onCaptureSequenceCompleted(CameraCaptureSession session, CameraCaptureSequenceId cameraCaptureSequenceId, long lastFrameNumber) {
                                         RobotLog.ii(TAG, "capture sequence %s reports completed: lastFrame=%d", cameraCaptureSequenceId, lastFrameNumber);
                                     }
                                 })
@@ -306,6 +302,5 @@ public class ConceptWebcam extends LinearOpMode {
             RobotLog.ee(TAG, e, "exception in saveBitmap()");
             error("exception saving %s", file.getName());
         }
-
     }
 }
