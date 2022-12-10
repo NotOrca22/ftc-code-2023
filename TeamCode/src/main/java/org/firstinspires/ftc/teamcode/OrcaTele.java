@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp(name="OrcaTele",group="")
 public class OrcaTele extends OrcaRobot {
-    static final double     DRIVE_SPEED             = 0.6;     // Max driving speed for better distance accuracy.
-    static final double SLIDE_SPEED = 0.7;
+    static final double     DRIVE_SPEED             = 0.65;     // Max driving speed for better distance accuracy.
+    static final double SLIDE_SPEED = 0.8;
 
     /**
      * Power is positive, robot will slide left, otherwise slide right
@@ -16,7 +16,7 @@ public class OrcaTele extends OrcaRobot {
      */
     protected void slideByPower(double power){
         motorFrontLeft.setPower(power);
-        motorBackLeft.setPower(-power*1.01);
+        motorBackLeft.setPower(-power);
         motorFrontRight.setPower(power);
         motorBackRight.setPower(-power);
     }
@@ -65,9 +65,9 @@ public class OrcaTele extends OrcaRobot {
         double rx = gamepad1.right_stick_x;
 
         if(gamepad1.x){
-            slideByPower(0.9);
+            slideByPower(0.8);
         }else if(gamepad1.b){
-            slideByPower(-0.9);
+            slideByPower(-0.8);
         }else if(gamepad1.y){
             driveByPower(DRIVE_SPEED);
         }else if(gamepad1.a){
