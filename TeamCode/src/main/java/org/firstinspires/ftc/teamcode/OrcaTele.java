@@ -88,14 +88,17 @@ public class OrcaTele extends OrcaRobot {
 
     protected void raiseSlider(int targetPos){
         raise.setTargetPosition(targetPos);
+        raise2.setTargetPosition(targetPos);
         raise.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        raise2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         raise.setVelocity(ARM_FULL_SPEED_IN_COUNTS);
-        while (raise.isBusy()) {
+        raise2.setVelocity(ARM_FULL_SPEED_IN_COUNTS);
+
+        while (raise.isBusy() || raise2.isBusy()) {
             operate();
-            sleep(50);
+//            sleep(50);
         }
     }
-
     @Override
     public void runOpMode() throws InterruptedException {
         setup();
@@ -111,33 +114,44 @@ public class OrcaTele extends OrcaRobot {
 
         double armPos = 0.42;
         raise.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        raise2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         while (opModeIsActive()) {
 
             raise.setTargetPositionTolerance(100);
+            raise2.setTargetPositionTolerance(100);
             operate();
 
             int currentRaisedPosition = raise.getCurrentPosition();
+            int currentRaisedPosition2 = raise2.getCurrentPosition();
             telemetry.addData("armPos", currentRaisedPosition);
             int raiseStep = (int) (150*gamepad2.left_stick_y);
             int targetRaise = currentRaisedPosition;
+            int targetRaise2 = currentRaisedPosition2;
             if (gamepad2.y) { // assuming bottom is 0, negative is up
-                targetRaise = (int)((ARM_COUNTS_FOR_LOW_JUNCTION - 100) * 435/312);
+                targetRaise = (int)((ARM_COUNTS_FOR_LOW_JUNCTION - 100));
             } else if (gamepad2.a) {
-                targetRaise = (int)((ARM_COUNTS_FOR_HIGH_JUNCTION - 100)*435/312 );
+                targetRaise = (int)((ARM_COUNTS_FOR_HIGH_JUNCTION - 100) );
             } else if (gamepad2.b) {
-                targetRaise = (int)(((ARM_COUNTS_FOR_MEDIUM_JUNCTION - 100) * 435/312));
+                targetRaise = (int)(((ARM_COUNTS_FOR_MEDIUM_JUNCTION - 100)));
             } else if (gamepad2.right_bumper){
                 targetRaise = 0;
             } else {
                 targetRaise = currentRaisedPosition + raiseStep;
+//                targetRaise2 = currentRaisedPosition2 - raiseStep;
             }
+            targetRaise2 = targetRaise;
 
             if (gamepad2.dpad_up) {
                 armPos = 0.42;
             } else if (gamepad2.dpad_left) {
-                armPos = 0.1;
+                if (raise.getCurrentPosition() < -660) {
+                    armPos = 0.75;
+                }
             } else if (gamepad2.dpad_right) {
-                armPos = 0.75;
+                if (raise.getCurrentPosition() < -660) {
+                    armPos = 0.1;
+
+                }
             }
             turnArm.setPosition(armPos);
             raiseSlider(targetRaise);
