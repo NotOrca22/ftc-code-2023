@@ -45,7 +45,7 @@ public class MyTestAuto extends OrcaAutoBase {
 
                 .addTemporalMarker(() -> {
 
-                    drive.lowerConeHolder();
+
                     drive.lock();
                 })
                 .waitSeconds(0.3)
@@ -65,14 +65,19 @@ public class MyTestAuto extends OrcaAutoBase {
                 })
 //                .waitSeconds(0.3)
                 .addTemporalMarker(() -> {
+
                     drive.raiseSlider(-ARM_COUNTS_FOR_FIVE_CONES);
                 })
                 .waitSeconds(0.1)
-                .forward(14)
+                .forward(13.7)
                 .turn(Math.toRadians(-90))
+                .addTemporalMarker(() -> {
+                    drive.lowerConeHolder();
+                })
                 .forward(15.5)
                 .setVelConstraint(drive.getVelocityConstraint(MAX_VEL/6, MAX_ANG_VEL, TRACK_WIDTH))
                 .setAccelConstraint(drive.getAccelerationConstraint(MAX_ACCEL/4))
+
                 .forward(5)
 //                .waitSeconds(0.5)
                 .resetAccelConstraint()
@@ -81,7 +86,7 @@ public class MyTestAuto extends OrcaAutoBase {
                     drive.raiseSlider(-ARM_COUNTS_FOR_FIVE_CONES_DOWN);
 
                 })
-                .waitSeconds(0.3)
+                .waitSeconds(0.5)
                 .addTemporalMarker(() -> {
                     drive.lock();
                 })
@@ -116,11 +121,11 @@ public class MyTestAuto extends OrcaAutoBase {
                     drive.raiseSlider(-ARM_COUNTS_FOR_FOUR_CONES_DOWN);
 
                 })
-                .waitSeconds(0.3)
+                .waitSeconds(0.5)
                 .addTemporalMarker(() -> {
                     drive.lock();
                 })
-                .waitSeconds(0.3)
+                .waitSeconds(0.4)
                 .addTemporalMarker(() -> {
                     drive.raiseSlider(-ARM_COUNTS_FOR_LOW_JUNCTION);
 
@@ -151,11 +156,11 @@ public class MyTestAuto extends OrcaAutoBase {
                     drive.raiseSlider(-ARM_COUNTS_FOR_THREE_CONES_DOWN);
 
                 })
-                .waitSeconds(0.3)
+                .waitSeconds(0.5)
                 .addTemporalMarker(() -> {
                     drive.lock();
                 })
-                .waitSeconds(0.3)
+                .waitSeconds(0.5)
                 .addTemporalMarker(() -> {
                     drive.raiseSlider(-ARM_COUNTS_FOR_LOW_JUNCTION);
 
@@ -165,7 +170,7 @@ public class MyTestAuto extends OrcaAutoBase {
                     drive.turnArm(0.22);
                 })
                 .back(9.5)
-                .waitSeconds(0.3)
+                .waitSeconds(0.5)
                 .addTemporalMarker(() -> {
                     drive.unlock();
                 })
@@ -185,11 +190,11 @@ public class MyTestAuto extends OrcaAutoBase {
                     drive.raiseSlider(-ARM_COUNTS_FOR_TWO_CONES_DOWN);
 
                 })
-                .waitSeconds(0.3)
+                .waitSeconds(0.5)
                 .addTemporalMarker(() -> {
                     drive.lock();
                 })
-                .waitSeconds(0.3)
+                .waitSeconds(0.5)
                 .addTemporalMarker(() -> {
                     drive.raiseSlider(-ARM_COUNTS_FOR_LOW_JUNCTION);
 
