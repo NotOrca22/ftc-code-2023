@@ -18,7 +18,7 @@ public class OrcaRightAuto extends OrcaAutoBase {
 
 
         }
-        openClaw();
+//        openClaw();
         sleep(100);
     }
 
@@ -42,7 +42,7 @@ public class OrcaRightAuto extends OrcaAutoBase {
         }
 //        turn(roundAngle((int) (60-getRawHeading())), 0.6);
 //        slide(30, 0.5, 90);
-        openClaw();
+//        openClaw();
     }
 
 
@@ -59,11 +59,11 @@ public class OrcaRightAuto extends OrcaAutoBase {
     @Override
     public void runOpMode() {
         setup();
-        openClaw();
+//        openClaw();
         robotHeading = getRawHeading();
         raise.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         waitForStart();
-        closeClaw();
+//        closeClaw();
         sleep(500);
         SleevePosition position = pipeline.getAnalysis();
         if (opModeIsActive()) {

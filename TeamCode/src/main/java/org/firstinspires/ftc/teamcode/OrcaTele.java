@@ -7,16 +7,16 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp(name="OrcaTele",group="")
 public class OrcaTele extends OrcaRobot {
-    static final double     DRIVE_SPEED             = 0.6;     // Max driving speed for better distance accuracy.
-    static final double SLIDE_SPEED = 0.7;
-
+    static final double     DRIVE_SPEED             = 0.7;     // Max driving speed for better distance accuracy.
+    static final double SLIDE_SPEED = 0.85;
+    public boolean isSlow = false;
     /**
      * Power is positive, robot will slide left, otherwise slide right
      * @param power
      */
     protected void slideByPower(double power){
         motorFrontLeft.setPower(power);
-        motorBackLeft.setPower(-power*1.01);
+        motorBackLeft.setPower(-power);
         motorFrontRight.setPower(power);
         motorBackRight.setPower(-power);
     }
@@ -49,14 +49,18 @@ public class OrcaTele extends OrcaRobot {
         double x = gamepad1.left_stick_x;
         double y = gamepad1.left_stick_y; // Counteract imperfect strafing
         if (gamepad2.x) {
-            openClaw();
-            sleep(300);
-            raiseSlider(0);
+            setPick(0.45);
+//            sleep(200);
+//            coneHolder.setPosition(0.5);
+//            openClaw();
+//            letGo();
+//            sleep(300);
+//            raiseSlider(0);
         } else if (gamepad2.left_bumper) {
-            closeClaw();
-        } else if (gamepad2.right_trigger > 0.3) {
-            openClaw();
+//            closeClaw();
+            setPick(0.65);
         }
+
         if (abs(x) > abs(y)) {
             y = 0;
         } else {
@@ -102,7 +106,9 @@ public class OrcaTele extends OrcaRobot {
     @Override
     public void runOpMode() throws InterruptedException {
         setup();
-        openClaw();
+        coneHolder.setPosition(0.29);
+//        setPick(0.5); // 0.75 open
+//        openClaw();
 //        motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 //        motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 //        motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -112,7 +118,7 @@ public class OrcaTele extends OrcaRobot {
         if (isStopRequested()) return;
 
 
-        double armPos = 0.42;
+        double armPos = 0.55;
         raise.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         raise2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         while (opModeIsActive()) {
@@ -127,36 +133,46 @@ public class OrcaTele extends OrcaRobot {
             int raiseStep = (int) (150*gamepad2.left_stick_y);
             int targetRaise = currentRaisedPosition;
             int targetRaise2 = currentRaisedPosition2;
-            if (gamepad2.y) { // assuming bottom is 0, negative is up
-                targetRaise = (int)((ARM_COUNTS_FOR_LOW_JUNCTION - 100));
+            if (gamepad2.y) { // assuming bottom is 0, positive is up
+                targetRaise = (int)((-ARM_COUNTS_FOR_LOW_JUNCTION));
             } else if (gamepad2.a) {
-                targetRaise = (int)((ARM_COUNTS_FOR_HIGH_JUNCTION - 100) );
+                targetRaise = (int)(-ARM_COUNTS_FOR_HIGH_JUNCTION );
             } else if (gamepad2.b) {
-                targetRaise = (int)(((ARM_COUNTS_FOR_MEDIUM_JUNCTION - 100)));
+                targetRaise = (int)(-ARM_COUNTS_FOR_MEDIUM_JUNCTION);
             } else if (gamepad2.right_bumper){
                 targetRaise = 0;
             } else {
-                targetRaise = currentRaisedPosition + raiseStep;
+                targetRaise = currentRaisedPosition - raiseStep;
 //                targetRaise2 = currentRaisedPosition2 - raiseStep;
             }
             targetRaise2 = targetRaise;
 
             if (gamepad2.dpad_up) {
-                armPos = 0.42;
+                armPos = 0.55;
             } else if (gamepad2.dpad_left) {
-                if (raise.getCurrentPosition() < -660) {
-                    armPos = 0.75;
-                }
+//                if (raise.getCurrentPosition() < -660) {
+                armPos = 0.88;
             } else if (gamepad2.dpad_right) {
-                if (raise.getCurrentPosition() < -660) {
-                    armPos = 0.1;
+//                if (raise.getCurrentPosition() < -660) {
+                    armPos = 0.22;
 
-                }
+//                }
             }
-            turnArm.setPosition(armPos);
+            if (gamepad1.a) {
+                isSlow = true;
+            } else if (gamepad1.b) {
+                isSlow = false;
+            }
+             turnArm.setPosition(armPos);
             raiseSlider(targetRaise);
-            telemetry.addData("clawPos", claw.getPosition());
-            telemetry.addData("claw2Pos", claw2.getPosition());
+            if (raise.getCurrentPosition() < 190) { // not good, will fix
+//            openClaw();
+                coneHolder.setPosition(0.29);
+            } else {
+                coneHolder.setPosition(0.5);
+            }
+//            telemetry.addData("clawPos", claw.getPosition());
+//            telemetry.addData("claw2Pos", claw2.getPosition());
             telemetry.update();
         }
     }

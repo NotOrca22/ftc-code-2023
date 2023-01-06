@@ -46,7 +46,7 @@ public class OrcaLeftAuto extends OrcaAutoBase {
             driveDistance(-300, 0.5, 0);
 
             driveDistance(1640, 0.1,0);
-            openClaw();
+//            openClaw();
 
         }
     }
@@ -118,7 +118,7 @@ public class OrcaLeftAuto extends OrcaAutoBase {
             sendTelemetry();
             sleep(5000);
         }
-        openClaw();
+//        openClaw();
     }
 
     protected void raiseSlider1(int targetPos, SleevePosition position){
@@ -135,7 +135,7 @@ public class OrcaLeftAuto extends OrcaAutoBase {
 
             driveDistance(-890, 0.6,-180);
 
-            openClaw();
+//            openClaw();
 
             prepareToPark(0, position);
 
@@ -147,19 +147,19 @@ public class OrcaLeftAuto extends OrcaAutoBase {
     {
 
         setup();
-        openClaw();
+//        openClaw();
         raise.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        turn(90, 0.5);
 //        sleep(1500);
 //        sendTelemetry();
 //        sleep(20000);
         waitForStart();
-        closeClaw();
+//        closeClaw();
         sleep(500);
         SleevePosition position = pipeline.getAnalysis();
         if (opModeIsActive()) {
             raiseSlider1(ARM_COUNTS_FOR_MEDIUM_JUNCTION, position);
-            openClaw();
+//            openClaw();
 //            slide(-50, 0.5);
 
         }

@@ -40,11 +40,11 @@ public class LeftTele extends OrcaRobot {
         double x = gamepad1.left_stick_x;
         double y = gamepad1.left_stick_y; // Counteract imperfect strafing
         if (gamepad2.x) {
-            openClaw();
+//            openClaw();
             sleep(100);
             raiseSlider(0);
         } else if (gamepad2.left_bumper) {
-            closeClaw();
+//            closeClaw();
         }
         if (Math.abs(x) > Math.abs(y)) {
             y = 0;
@@ -88,7 +88,7 @@ public class LeftTele extends OrcaRobot {
     @Override
     public void runOpMode() throws InterruptedException {
         setup();
-        openClaw();
+//        openClaw();
         waitForStart();
 
         if (isStopRequested()) return;
@@ -123,8 +123,8 @@ public class LeftTele extends OrcaRobot {
             }
 
             raiseSlider(targetRaise);
-            telemetry.addData("clawPos", claw.getPosition());
-            telemetry.addData("claw2Pos", claw2.getPosition());
+//            telemetry.addData("clawPos", claw.getPosition());
+//            telemetry.addData("claw2Pos", claw2.getPosition());
             telemetry.update();
         }
     }

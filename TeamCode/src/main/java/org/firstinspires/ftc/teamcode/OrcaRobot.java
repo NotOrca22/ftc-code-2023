@@ -9,6 +9,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 
@@ -34,13 +35,17 @@ public abstract class OrcaRobot extends LinearOpMode {
     public static final double PULLEY_DIAMETER_IN_MM = 35.65;
     public static final int ARM_COUNTS_PER_MILLIMETER = (int) ((COUNTS_PER_ENCODER_REV * ARM_GEAR_RATIO) / (PULLEY_DIAMETER_IN_MM * Math.PI));
     public static final double ARM_FULL_SPEED_IN_COUNTS = COUNTS_PER_ENCODER_REV * ARM_GEAR_RATIO * ARM_MOTOR_SPEED_IN_RPM / 60;
-    public static final int ARM_COUNTS_FOR_HIGH_JUNCTION = -(int) ((HIGH_JUNCTION_IN_MILLIMETER+125) * ARM_COUNTS_PER_MILLIMETER);
-    public static final int ARM_COUNTS_FOR_MEDIUM_JUNCTION = -(int) ((MEDIUM_JUNCTION_IN_MILLIMETER+90) * ARM_COUNTS_PER_MILLIMETER);
-    public static final int ARM_COUNTS_FOR_LOW_JUNCTION = -(int) ((LOW_JUNCTION_IN_MILLIMETER+80) * ARM_COUNTS_PER_MILLIMETER);
-    public static final int ARM_COUNTS_FOR_FIVE_CONES = -(int) (160 * ARM_COUNTS_PER_MILLIMETER);
+    public static final int ARM_COUNTS_FOR_HIGH_JUNCTION = -(int) ((838+125) * ARM_COUNTS_PER_MILLIMETER);
+    public static final int ARM_COUNTS_FOR_MEDIUM_JUNCTION = -(int) ((720) * ARM_COUNTS_PER_MILLIMETER);
+    public static final int ARM_COUNTS_FOR_LOW_JUNCTION = -(int) ((430) * ARM_COUNTS_PER_MILLIMETER);
+    public static final int ARM_COUNTS_FOR_FIVE_CONES = -(int) (220 * ARM_COUNTS_PER_MILLIMETER);
+    public static final int ARM_COUNTS_FOR_FIVE_CONES_DOWN = -(int) (160 * ARM_COUNTS_PER_MILLIMETER);
     public static final int ARM_COUNTS_FOR_FOUR_CONES = -(int) ((125) * ARM_COUNTS_PER_MILLIMETER);
+    public static final int ARM_COUNTS_FOR_FOUR_CONES_DOWN = -(int) ((120) * ARM_COUNTS_PER_MILLIMETER);
     public static final int ARM_COUNTS_FOR_THREE_CONES = -(int) (92 * ARM_COUNTS_PER_MILLIMETER);
+    public static final int ARM_COUNTS_FOR_THREE_CONES_DOWN = -(int) ((80) * ARM_COUNTS_PER_MILLIMETER);
     public static final int ARM_COUNTS_FOR_TWO_CONES = -(int) (62 * ARM_COUNTS_PER_MILLIMETER);
+    public static final int ARM_COUNTS_FOR_TWO_CONES_DOWN = -(int) ((40) * ARM_COUNTS_PER_MILLIMETER);
     public static final int ARM_COUNTS_FOR_ONE_CONES = -(int) (12 * ARM_COUNTS_PER_MILLIMETER);
     protected DcMotorEx motorFrontLeft;
     protected DcMotorEx motorBackLeft;
@@ -48,20 +53,27 @@ public abstract class OrcaRobot extends LinearOpMode {
     protected DcMotorEx motorBackRight;
     protected DcMotorEx raise;
     protected DcMotorEx raise2;
-    protected Servo claw;
-    protected Servo claw2;
+//    protected Servo claw;
+//    protected Servo claw2;
+    protected Servo pick;
     protected Servo turnArm;
+    protected Servo coneHolder;
 
-    protected void openClaw(){
-        claw.setPosition(1);
-        claw2.setPosition(0);
+//    protected void openClaw(){
+//        claw.setPosition(1);
+//        claw2.setPosition(0);
+//    }
+//
+//    protected void closeClaw(){
+//        claw.setPosition(0.65);
+//        claw2.setPosition(0.35);
+//    }
+    protected void letGo() {
+        pick.setPosition(1);
     }
-
-    protected void closeClaw(){
-        claw.setPosition(0.65);
-        claw2.setPosition(0.35);
+    protected void setPick(double pos) {
+        pick.setPosition(pos);
     }
-
     /**
      * Set up all motors and servos.
      */
@@ -72,9 +84,11 @@ public abstract class OrcaRobot extends LinearOpMode {
         motorBackRight = (DcMotorEx) hardwareMap.dcMotor.get("backRight");
         raise = (DcMotorEx) hardwareMap.dcMotor.get("raise");
         raise2 = (DcMotorEx) hardwareMap.dcMotor.get("raise2");
-        claw = hardwareMap.servo.get("claw");
-        claw2 = hardwareMap.servo.get("claw2");
-        turnArm = hardwareMap.servo.get("turnArm");
+        pick = hardwareMap.servo.get("pick");
+//        claw2 = hardwareMap.servo.get("claw2");
+        turnArm = hardwareMap.servo.get("turn");
+        coneHolder = hardwareMap.servo.get("coneholder");
+        raise2.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void setDrivingMotorMode(DcMotor.RunMode mode) {

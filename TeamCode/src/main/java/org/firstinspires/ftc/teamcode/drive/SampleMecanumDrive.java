@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.firstinspires.ftc.teamcode.OrcaRobot.ARM_FULL_SPEED_IN_COUNTS;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ACCEL;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ANG_ACCEL;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ANG_VEL;
@@ -83,10 +84,13 @@ public class SampleMecanumDrive extends MecanumDrive {
     private VoltageSensor batteryVoltageSensor;
     public SleeveDetectionPipeline pipeline   = null;
     protected DcMotorEx raise;
+    protected DcMotorEx raise2;
     protected Servo claw;
     protected Servo claw2;
-    protected OpenCvCamera    webcam        = null;
+//    protected OpenCvCamera    webcam        = null;
     protected Servo turnArm;
+    protected Servo coneHolder;
+    protected Servo pick;
 
     public SampleMecanumDrive(HardwareMap hardwareMap) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
@@ -109,24 +113,24 @@ public class SampleMecanumDrive extends MecanumDrive {
         imu.initialize(parameters);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-        webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
-
-        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
-            @Override
-            public void onOpened() {
-                webcam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
-            }
-
-            @Override
-            public void onError(int errorCode) {
-                /*
-                 * This will be called if the camera could not be opened
-                 */
-            }
-        });
-        pipeline = new SleeveDetectionPipeline();
-        webcam.setPipeline(pipeline);
+//        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+//        webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
+//
+//        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+//            @Override
+//            public void onOpened() {
+//                webcam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
+//            }
+//
+//            @Override
+//            public void onError(int errorCode) {
+//                /*
+//                 * This will be called if the camera could not be opened
+//                 */
+//            }
+//        });
+//        pipeline = new SleeveDetectionPipeline();
+//        webcam.setPipeline(pipeline);
         // TODO: If the hub containing the IMU you are using is mounted so that the "REV" logo does
         // not face up, remap the IMU axes so that the z-axis points upward (normal to the floor.)
         //
@@ -154,11 +158,16 @@ public class SampleMecanumDrive extends MecanumDrive {
         leftRear = hardwareMap.get(DcMotorEx.class, "backLeft");
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
         raise = (DcMotorEx) hardwareMap.dcMotor.get("raise");
-        claw = hardwareMap.servo.get("claw");
-        claw2 = hardwareMap.servo.get("claw2");
+        raise2 = (DcMotorEx) hardwareMap.dcMotor.get("raise2");
+        raise.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        raise2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        coneHolder = hardwareMap.servo.get("coneholder");
+//        claw = hardwareMap.servo.get("claw");
+//        claw2 = hardwareMap.servo.get("claw2");
         rightRear = hardwareMap.get(DcMotorEx.class, "backRight");
         rightFront = hardwareMap.get(DcMotorEx.class, "frontRight");
-        turnArm = hardwareMap.servo.get("turnArm");
+        pick = hardwareMap.servo.get("pick");
+        turnArm = hardwareMap.servo.get("turn");
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
@@ -213,7 +222,18 @@ public class SampleMecanumDrive extends MecanumDrive {
                         .build()
         );
     }
-
+    public void lowerConeHolder() {
+        coneHolder.setPosition(0.29);
+    }
+    public void raiseHolder() {
+        coneHolder.setPosition(0.5);
+    }
+    public void unlock() {
+        pick.setPosition(0.625);
+    }
+    public void lock() {
+        pick.setPosition(0.45);
+    }
     public void turn(double angle) {
         turnAsync(angle);
         waitForIdle();
@@ -352,19 +372,22 @@ public class SampleMecanumDrive extends MecanumDrive {
     }
     public void raiseSlider(int targetPos) {
         raise.setTargetPosition(targetPos);
+        raise2.setTargetPosition(targetPos);
         raise.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        raise.setPower(1.0);
+        raise2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        raise.setVelocity(ARM_FULL_SPEED_IN_COUNTS);
+        raise2.setVelocity(ARM_FULL_SPEED_IN_COUNTS);
     }
     public void turnArm(double pos) {
         turnArm.setPosition(pos);
     }
-    public void openClaw(){
-        claw.setPosition(1);
-        claw2.setPosition(0);
-    }
-
-    public void closeClaw(){
-        claw.setPosition(0.65);
-        claw2.setPosition(0.35);
-    }
+//    public void openClaw(){
+//        claw.setPosition(1);
+//        claw2.setPosition(0);
+//    }
+//
+//    public void closeClaw(){
+//        claw.setPosition(0.65);
+//        claw2.setPosition(0.35);
+//    }
 }
