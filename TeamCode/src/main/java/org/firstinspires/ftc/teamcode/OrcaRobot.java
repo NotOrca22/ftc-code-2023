@@ -36,7 +36,7 @@ public abstract class OrcaRobot extends LinearOpMode {
     public static final int ARM_COUNTS_PER_MILLIMETER = (int) ((COUNTS_PER_ENCODER_REV * ARM_GEAR_RATIO) / (PULLEY_DIAMETER_IN_MM * Math.PI));
     public static final double ARM_FULL_SPEED_IN_COUNTS = COUNTS_PER_ENCODER_REV * ARM_GEAR_RATIO * ARM_MOTOR_SPEED_IN_RPM / 60;
     public static final int ARM_COUNTS_FOR_HIGH_JUNCTION = -(int) ((838+125) * ARM_COUNTS_PER_MILLIMETER);
-    public static final int ARM_COUNTS_FOR_MEDIUM_JUNCTION = -(int) ((710) * ARM_COUNTS_PER_MILLIMETER);
+    public static final int ARM_COUNTS_FOR_MEDIUM_JUNCTION = -(int) ((690) * ARM_COUNTS_PER_MILLIMETER);
     public static final int ARM_COUNTS_FOR_LOW_JUNCTION = -(int) ((430) * ARM_COUNTS_PER_MILLIMETER);
     public static final int ARM_COUNTS_FOR_FIVE_CONES = -(int) (220 * ARM_COUNTS_PER_MILLIMETER);
     public static final int ARM_COUNTS_FOR_FIVE_CONES_DOWN = -(int) (150 * ARM_COUNTS_PER_MILLIMETER);
