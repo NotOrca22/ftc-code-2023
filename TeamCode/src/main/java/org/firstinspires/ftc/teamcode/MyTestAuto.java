@@ -35,7 +35,7 @@ public class MyTestAuto extends OrcaAutoBase {
 //        position = drive.pipeline.getAnalysis();
 //        telemetry.addData("pos", position);
 //        telemetry.update();
-        Pose2d startPos = new Pose2d(-62, -38, 0);
+        Pose2d startPos = new Pose2d(-62, -40, 0);
         drive.setPoseEstimate(startPos);
 
         TrajectorySequence trajSeq;
@@ -53,9 +53,8 @@ public class MyTestAuto extends OrcaAutoBase {
                     drive.raiseSlider(-(int)(OrcaRobot.ARM_COUNTS_FOR_MEDIUM_JUNCTION));
                 })
                 .waitSeconds(0.1)
-//                .strafeLeft(8.25)
-//                .forward(37.5)
-                .splineTo(new Vector2d(-24.5, -33), 0.0)
+                .strafeLeft(8.25)
+                .forward(37.5)
                 .waitSeconds(0.3)
                 .addTemporalMarker(() -> {
                     drive.unlock();
@@ -70,17 +69,16 @@ public class MyTestAuto extends OrcaAutoBase {
                     drive.raiseSlider(-ARM_COUNTS_FOR_FIVE_CONES);
                 })
                 .waitSeconds(0.1)
-//                .forward(13.7)
-//                .turn(Math.toRadians(-90))
-//                .addTemporalMarker(() -> {
-//                    drive.lowerConeHolder();
-//                })
-//                .forward(15.5)
-//                .setVelConstraint(drive.getVelocityConstraint(MAX_VEL/6, MAX_ANG_VEL, TRACK_WIDTH))
-//                .setAccelConstraint(drive.getAccelerationConstraint(MAX_ACCEL/4))
-//
-//                .forward(5)
+                .forward(13.7)
+                .turn(Math.toRadians(-90))
+                .addTemporalMarker(() -> {
+                    drive.lowerConeHolder();
+                })
+                .forward(15.5)
+                .setVelConstraint(drive.getVelocityConstraint(MAX_VEL/6, MAX_ANG_VEL, TRACK_WIDTH))
+                .setAccelConstraint(drive.getAccelerationConstraint(MAX_ACCEL/4))
 
+                .forward(5)
 //                .waitSeconds(0.5)
                 .resetAccelConstraint()
                 .resetVelConstraint()

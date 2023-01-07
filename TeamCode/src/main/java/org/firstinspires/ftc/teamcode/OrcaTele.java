@@ -50,6 +50,9 @@ public class OrcaTele extends OrcaRobot {
         double y = gamepad1.left_stick_y; // Counteract imperfect strafing
         if (gamepad2.x) {
             setPick(0.45);
+            if (raise.getCurrentPosition() < 120) {
+                coneHolder.setPosition(0.65);
+            }
 //            sleep(200);
 //            coneHolder.setPosition(0.5);
 //            openClaw();
@@ -59,6 +62,10 @@ public class OrcaTele extends OrcaRobot {
         } else if (gamepad2.left_bumper) {
 //            closeClaw();
             setPick(0.65);
+            coneHolder.setPosition(0.29);
+//            if (raise.getCurrentPosition() < 120) {
+//                coneHolder.setPosition(0.65);
+//            }
         }
 
         if (abs(x) > abs(y)) {
@@ -140,7 +147,8 @@ public class OrcaTele extends OrcaRobot {
             } else if (gamepad2.b) {
                 targetRaise = (int)(-ARM_COUNTS_FOR_MEDIUM_JUNCTION);
             } else if (gamepad2.right_bumper){
-                targetRaise = 0;
+                targetRaise = 230;
+
             } else {
                 targetRaise = currentRaisedPosition - raiseStep;
 //                targetRaise2 = currentRaisedPosition2 - raiseStep;
@@ -165,12 +173,12 @@ public class OrcaTele extends OrcaRobot {
             }
              turnArm.setPosition(armPos);
             raiseSlider(targetRaise);
-            if (raise.getCurrentPosition() < 190) { // not good, will fix
-//            openClaw();
-                coneHolder.setPosition(0.29);
-            } else {
-                coneHolder.setPosition(0.5);
-            }
+//            if (raise.getCurrentPosition() < 125 && (abs(pick.getPosition()) - 0.65) < 0.01)  { // not good, will fix
+////            openClaw();
+//                coneHolder.setPosition(0.29);
+//            if () {
+//                coneHolder.setPosition(0.65);
+//            }
 //            telemetry.addData("clawPos", claw.getPosition());
 //            telemetry.addData("claw2Pos", claw2.getPosition());
             telemetry.update();
