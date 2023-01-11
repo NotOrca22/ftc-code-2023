@@ -229,7 +229,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         coneHolder.setPosition(0.65);
     }
     public void unlock() {
-        pick.setPosition(0.625);
+        pick.setPosition(0.65);
     }
     public void lock() {
         pick.setPosition(0.45);

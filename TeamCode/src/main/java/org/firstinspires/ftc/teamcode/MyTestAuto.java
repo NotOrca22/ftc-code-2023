@@ -31,11 +31,14 @@ public class MyTestAuto extends OrcaAutoBase {
         drive.raiseHolder();
         drive.turnArm(0.88);
         waitForStart();
+        SleevePosition position = pipeline.getAnalysis();
+        telemetry.addData("Position", position);
+        sendTelemetry();
 //        sleep(2000);
 //        position = drive.pipeline.getAnalysis();
 //        telemetry.addData("pos", position);
 //        telemetry.update();
-        Pose2d startPos = new Pose2d(-62, -40, 0);
+        Pose2d startPos = new Pose2d(-62, -38, 0);
         drive.setPoseEstimate(startPos);
 
         TrajectorySequence trajSeq;
@@ -53,13 +56,14 @@ public class MyTestAuto extends OrcaAutoBase {
                     drive.raiseSlider(-(int)(OrcaRobot.ARM_COUNTS_FOR_MEDIUM_JUNCTION));
                 })
                 .waitSeconds(0.1)
-                .strafeLeft(8.25)
+                .strafeLeft(8.5)
                 .forward(37.5)
+//                .splineTo(new Vector2d(-24.5, -35), 0.0)
                 .waitSeconds(0.3)
                 .addTemporalMarker(() -> {
                     drive.unlock();
                 })
-                .waitSeconds(0.5)
+                .waitSeconds(0.3)
                 .addTemporalMarker(() -> {
                     drive.turnArm(0.55);
                 })
@@ -69,16 +73,16 @@ public class MyTestAuto extends OrcaAutoBase {
                     drive.raiseSlider(-ARM_COUNTS_FOR_FIVE_CONES);
                 })
                 .waitSeconds(0.1)
-                .forward(13.7)
+                .forward(12.75)
                 .turn(Math.toRadians(-90))
                 .addTemporalMarker(() -> {
                     drive.lowerConeHolder();
                 })
-                .forward(15.5)
+                .forward(16.25)
                 .setVelConstraint(drive.getVelocityConstraint(MAX_VEL/6, MAX_ANG_VEL, TRACK_WIDTH))
                 .setAccelConstraint(drive.getAccelerationConstraint(MAX_ACCEL/4))
 
-                .forward(5)
+                .forward(4.5)
 //                .waitSeconds(0.5)
                 .resetAccelConstraint()
                 .resetVelConstraint()
@@ -86,11 +90,11 @@ public class MyTestAuto extends OrcaAutoBase {
                     drive.raiseSlider(-ARM_COUNTS_FOR_FIVE_CONES_DOWN);
 
                 })
-                .waitSeconds(0.5)
+                .waitSeconds(0.3)
                 .addTemporalMarker(() -> {
                     drive.lock();
                 })
-                .waitSeconds(0.4)
+                .waitSeconds(0.25)
                 .addTemporalMarker(() -> {
                     drive.raiseSlider(-ARM_COUNTS_FOR_LOW_JUNCTION);
 
@@ -99,7 +103,7 @@ public class MyTestAuto extends OrcaAutoBase {
                 .addTemporalMarker(() -> {
                     drive.turnArm(0.22);
                 })
-                .back(9.5)
+                .back(10)
                 .waitSeconds(0.3)
                 .addTemporalMarker(() -> {
                     drive.unlock();
@@ -110,7 +114,7 @@ public class MyTestAuto extends OrcaAutoBase {
                 })
 //                .waitSeconds(0.2)
                 // start here!
-                .forward(6.5)
+                .forward(7)
                 .setVelConstraint(drive.getVelocityConstraint(MAX_VEL/6, MAX_ANG_VEL, TRACK_WIDTH))
                 .setAccelConstraint(drive.getAccelerationConstraint(MAX_ACCEL/4))
                 .forward(4.5)
@@ -121,7 +125,7 @@ public class MyTestAuto extends OrcaAutoBase {
                     drive.raiseSlider(-ARM_COUNTS_FOR_FOUR_CONES_DOWN);
 
                 })
-                .waitSeconds(0.5)
+                .waitSeconds(0.3)
                 .addTemporalMarker(() -> {
                     drive.lock();
                 })
@@ -134,7 +138,7 @@ public class MyTestAuto extends OrcaAutoBase {
                 .addTemporalMarker(() -> {
                     drive.turnArm(0.22);
                 })
-                .back(9.5)
+                .back(10)
                 .waitSeconds(0.3)
                 .addTemporalMarker(() -> {
                     drive.unlock();
@@ -145,7 +149,7 @@ public class MyTestAuto extends OrcaAutoBase {
                 })
                 .waitSeconds(0.2)
                 // stop here!
-                .forward(6.5)
+                .forward(7)
                 .setVelConstraint(drive.getVelocityConstraint(MAX_VEL/6, MAX_ANG_VEL, TRACK_WIDTH))
                 .setAccelConstraint(drive.getAccelerationConstraint(MAX_ACCEL/4))
                 .forward(4.5)
@@ -160,7 +164,7 @@ public class MyTestAuto extends OrcaAutoBase {
                 .addTemporalMarker(() -> {
                     drive.lock();
                 })
-                .waitSeconds(0.5)
+                .waitSeconds(0.3)
                 .addTemporalMarker(() -> {
                     drive.raiseSlider(-ARM_COUNTS_FOR_LOW_JUNCTION);
 
@@ -169,7 +173,7 @@ public class MyTestAuto extends OrcaAutoBase {
                 .addTemporalMarker(() -> {
                     drive.turnArm(0.22);
                 })
-                .back(9.5)
+                .back(10.25)
                 .waitSeconds(0.5)
                 .addTemporalMarker(() -> {
                     drive.unlock();
@@ -179,7 +183,7 @@ public class MyTestAuto extends OrcaAutoBase {
                     drive.turnArm(0.55);
                 })
                 .waitSeconds(0.2)
-                .forward(6.5)
+                .forward(7)
                 .setVelConstraint(drive.getVelocityConstraint(MAX_VEL/6, MAX_ANG_VEL, TRACK_WIDTH))
                 .setAccelConstraint(drive.getAccelerationConstraint(MAX_ACCEL/4))
                 .forward(4.5)
@@ -203,26 +207,48 @@ public class MyTestAuto extends OrcaAutoBase {
                 .addTemporalMarker(() -> {
                     drive.turnArm(0.22);
                 })
-                .back(9.5)
+                .back(10.5)
                 .waitSeconds(0.3)
                 .addTemporalMarker(() -> {
                     drive.unlock();
                 })
                 .waitSeconds(0.3)
                 .addTemporalMarker(() -> {
-                    drive.turnArm(0.55);
+                    drive.raiseHolder();
                 })
-                .waitSeconds(0.2);
-//        if(position == SleevePosition.LEFT){
-//            trajSeq = trajSeqBuilder.forward(42)
-//                    .build();
-//        }else if(position == SleevePosition.RIGHT){
-//            trajSeq = trajSeqBuilder.back(5)
-//                    .build();
-//        }else{
-            trajSeq = trajSeqBuilder
+                .waitSeconds(0.1);
+
+        if(position == SleevePosition.LEFT){
+            trajSeq = trajSeqBuilder.back(37.5).waitSeconds(0.1).addTemporalMarker(() -> {
+                        drive.turnArm(0.22);
+                        drive.raiseSlider(0);
+//                        drive.raiseHolder();
+
+
+                    })
+                    .waitSeconds(0.2)
                     .build();
-//                    }
+        }else if(position == SleevePosition.RIGHT){
+            trajSeq = trajSeqBuilder.forward(13.5).waitSeconds(0.1).addTemporalMarker(() -> {
+                        drive.turnArm(0.22);
+                        drive.raiseSlider(0);
+//                        drive.raiseHolder();
+//                        drive.raiseSlider(0);
+
+                    })
+                    .waitSeconds(0.2)
+                    .build();
+        }else{
+            trajSeq = trajSeqBuilder.back(10.5).waitSeconds(0.1).addTemporalMarker(() -> {
+                        drive.turnArm(0.22);
+                        drive.raiseSlider(0);
+//                        drive.raiseHolder();
+//                        drive.raiseSlider(0);
+
+                    })
+                    .waitSeconds(0.2)
+                    .build();
+                    }
 
 //                .addTemporalMarker(()->{ // Fourth stack cone
 //                    drive.raiseSlider(OrcaRobot.ARM_COUNTS_FOR_ONE_CONES);
@@ -244,9 +270,7 @@ public class MyTestAuto extends OrcaAutoBase {
 
 
         if(isStopRequested()) return;
-        SleevePosition position = pipeline.getAnalysis();
-        telemetry.addData("Position", position);
-        sendTelemetry();
+
         drive.followTrajectorySequence(trajSeq);
     }
 }

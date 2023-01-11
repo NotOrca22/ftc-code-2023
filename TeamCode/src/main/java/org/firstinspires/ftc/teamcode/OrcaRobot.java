@@ -1,9 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 
@@ -35,7 +40,7 @@ public abstract class OrcaRobot extends LinearOpMode {
     public static final double PULLEY_DIAMETER_IN_MM = 35.65;
     public static final int ARM_COUNTS_PER_MILLIMETER = (int) ((COUNTS_PER_ENCODER_REV * ARM_GEAR_RATIO) / (PULLEY_DIAMETER_IN_MM * Math.PI));
     public static final double ARM_FULL_SPEED_IN_COUNTS = COUNTS_PER_ENCODER_REV * ARM_GEAR_RATIO * ARM_MOTOR_SPEED_IN_RPM / 60;
-    public static final int ARM_COUNTS_FOR_HIGH_JUNCTION = -(int) ((838+125) * ARM_COUNTS_PER_MILLIMETER);
+    public static final int ARM_COUNTS_FOR_HIGH_JUNCTION = -(int) ((838+95) * ARM_COUNTS_PER_MILLIMETER);
     public static final int ARM_COUNTS_FOR_MEDIUM_JUNCTION = -(int) ((690) * ARM_COUNTS_PER_MILLIMETER);
     public static final int ARM_COUNTS_FOR_LOW_JUNCTION = -(int) ((430) * ARM_COUNTS_PER_MILLIMETER);
     public static final int ARM_COUNTS_FOR_FIVE_CONES = -(int) (220 * ARM_COUNTS_PER_MILLIMETER);
@@ -58,6 +63,7 @@ public abstract class OrcaRobot extends LinearOpMode {
     protected Servo pick;
     protected Servo turnArm;
     protected Servo coneHolder;
+    protected BNO055IMU imu           = null;
 
 //    protected void openClaw(){
 //        claw.setPosition(1);
@@ -77,7 +83,17 @@ public abstract class OrcaRobot extends LinearOpMode {
     /**
      * Set up all motors and servos.
      */
+    public double getRawHeading() {
+        Orientation angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        return angles.firstAngle;
+    }
+
     protected void setup() {
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit            = BNO055IMU.AngleUnit.DEGREES;
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
         motorFrontLeft = (DcMotorEx) hardwareMap.dcMotor.get("frontLeft");
         motorBackLeft = (DcMotorEx) hardwareMap.dcMotor.get("backLeft");
         motorFrontRight = (DcMotorEx) hardwareMap.dcMotor.get("frontRight");
